@@ -16,7 +16,7 @@ function getLocationFromIP(url,callback)
   console.log("calling getLocationFromIP");
 
     return new Promise((resolve,reject) => {
-    var request =new XMLHttpRequest();
+    let request =new XMLHttpRequest();
     request.open('GET',url+callback)
     request.onload= () =>{
       if(request.status==200  )
@@ -42,7 +42,7 @@ function getWeatherDetails(url,callback,loc)
   console.log("calling getWeatherDetails");
 
     return new Promise((resolve,reject) => {
-    var request =new XMLHttpRequest();
+    let request =new XMLHttpRequest();
     let furl=url+'&lat='+loc.lat+'&lon='+loc.lon+'&callback='+callback;
     console.log(furl);
     request.open('GET',furl)
@@ -111,7 +111,8 @@ window.onload= ()=>{
 
   document.getElementById("loader").style.display="block";
 
-  let w_uri="http://api.openweathermap.org/data/2.5/weather?appid=d8827afdb3abe01856143d0dbf14e95a"
+  let w_uri="http://api.openweathermap.org/data/2.5/weather?appid="
+  let   w_api_key="d8827afdb3abe01856143d0dbf14e95a";
   let wcallback="w_callback";
   console.log("Requesting IPINFO");
   let ipPromise=getLocationFromIP(uri,callback);
@@ -123,34 +124,45 @@ window.onload= ()=>{
       "lat":location.lat,
       "lon":location.lon
     };
-    let wPromise=getWeatherDetails(w_uri,wcallback,coords);
+    let wPromise=getWeatherDetails(w_uri+w_api_key,wcallback,coords);
     wPromise.then((wapi) => {
       console.log("parsing weather");
       weather=eval(wapi.response);
       //console.log(weather);
       summary={"w":weather,"l":location};
       let t=temp_converter(summary.w.temp);
+      let w_icon_uri= "http://openweathermap.org/img/w/"+summary.w.icon+'.png';
       console.log(summary);
       document.getElementById("loader").style.display="none";
       document.getElementById("city").innerHTML=summary.l.city;
       document.getElementById("country").innerHTML=summary.l.country;
-      document.getElementById("temp").innerHTML=t.celsius;
+      document.getElementById("temp").innerHTML=t.celsius+' &degC';
       document.getElementById("weather").innerHTML=summary.w.sum;
 
-      var btn_temp=document.getElementById("unit_button");
-      $('#unit_button').on('click',()=>{
+      //insert icon
+      let wicon=document.createElement("img");
+      wicon.setAttribute("src",w_icon_uri);
+      wicon.setAttribute("class","img img-responsive");
+      wicon.setAttribute("alt","Weather-Icon");
+
+
+      document.getElementById("w_icon").appendChild(wicon);
+
+
+      let btn_temp=document.getElementById("unit_button");
+      $('#temp').on('click',()=>{
         if(currentUnit=='celsius')
         {
-          $('#unit_button').text("Fahrenheit");
-          $("#temp").text(t.fahren);
+          //$('#unit_button').text("Fahrenheit");
+          $("#temp").html(t.fahren+' &deg;F');
           console.log(t.fahren);
           currentUnit='fahren';
 
         }
         else if(currentUnit=='fahren')
         {
-          $('#unit_button').text("Celsius");
-          $("#temp").text(t.celsius);
+          //$('#unit_button').text("Celsius");
+          $("#temp").html(t.celsius+' &degC');
           console.log(t.celsius);
           currentUnit='celsius';
 
