@@ -38,7 +38,7 @@ div.heading-row h1{
 }
 
 ::selection{
-  background: inherit;
+  background: whitesmoke;
   color:orange;
 }
 
@@ -58,10 +58,35 @@ div.heading-row h1{
 {
   box-shadow: 3px 0px 2px 2px #777;
 }
-#temp
+#temp_hold
 {
   box-shadow: 3px 0px 2px 2px #777;
+
 }
+#temp_hold .tooltip{
+  visibility: hidden;
+  background-color: orange;
+  opacity: 0.7;
+  text-align: center;
+  padding: 5px 0px;
+  border-radius: 7px;
+  padding: 0 5px;
+  display: inline-block;
+  color:white;
+  min-width: 25%;
+  bottom:20px;
+  left:3%
+}
+#temp_hold{
+  z-index: 1;
+}
+#temp_hold:hover .tooltip
+{
+  visibility: visible;
+  position: absolute;
+  bottom:4;
+}
+
 #weather
 {
   box-shadow: 3px 2px 2px 2px #777;
